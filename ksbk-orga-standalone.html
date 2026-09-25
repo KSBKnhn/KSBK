@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a84ff">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<title>KSBK-Spiele Orga</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg:#fafafc;--card:#fff;--line:#ededf2;--soft:#f3f3f7;--text:#1d1d1f;--muted:#6e6e73;
+  --accent:#0a84ff;--accent-soft:#e5f1ff;--ok:#34c759;--ok-soft:#e6f8ea;--warn:#ffb300;--warn-soft:#fff5d6;--bad:#ff3b30;--bad-soft:#ffe5e3;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);color-scheme:light}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,system-ui,sans-serif;font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+input{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
+.app{max-width:960px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(250,250,252,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top h1{font-size:18px;font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1;white-space:nowrap}
+.top .sub{font-size:11.5px;color:var(--muted);margin-top:2px;white-space:nowrap}
+.clock{text-align:right;min-width:0;flex:1}
+.clock .t{font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.clock .n{font-size:11.5px;color:var(--muted);margin-top:3px;font-weight:600;line-height:1.3}
+.clock .n b{font-weight:800}
+.clock .n.late b{color:var(--bad)}
+main{flex:1;padding:16px 16px calc(84px + env(safe-area-inset-bottom,0px))}
+.two{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:760px){.two{grid-template-columns:1fr 1fr;align-items:start}}
+.two>*{min-width:0}
+.card{min-width:0}
+.pill{display:inline-block;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:999px}
+h2{font-size:26px;font-weight:800;letter-spacing:-.025em;margin:10px 0 6px;line-height:1.1;text-wrap:balance}
+h3{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:0}
+.lead{color:var(--muted);margin:0 0 16px;font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:999px}
+.tag.ok{color:#1d7a35;background:var(--ok-soft)}.tag.warn{color:#8a5a00;background:var(--warn-soft)}.tag.bad{color:#b3261e;background:var(--bad-soft)}
+.dot{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-weight:800;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;font-weight:700;font-size:15px;border-radius:14px;padding:12px 18px;min-height:48px;transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.btn.sec{background:var(--soft);color:var(--text)}
+.btn.ghost{background:none;color:var(--accent);min-height:40px;padding:8px 12px}
+.btn.danger{background:var(--bad-soft);color:#b3261e}
+.btn.big{width:100%;font-size:18px;min-height:60px;border-radius:18px}
+/* blocks */
+.blk{border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:var(--shadow);overflow:hidden}
+.blk.cur{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.blk.past{opacity:.6}
+.blk .hd{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;padding:14px 14px 10px;width:100%;text-align:left}
+.blk .tm{font-size:17px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.blk .tm.sm{font-size:12px;color:var(--muted)}
+.blk .ti{font-weight:700;font-size:16px}
+.blk .wh{font-size:12px;color:var(--muted);margin-top:1px}
+.blk .prog{height:5px;background:var(--soft);border-radius:99px;overflow:hidden;margin:0 14px 12px}
+.blk .prog i{display:block;height:100%;background:var(--ok);width:0;transition:width .2s}
+.blk .cnt{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.blk .cnt.done{color:#1d7a35}
+.tasks{padding:0 14px 14px;display:flex;flex-direction:column;gap:6px}
+.tasks .grp{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent);margin:8px 0 2px}
+.task{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:start;padding:8px 8px;border-radius:12px;text-align:left;width:100%;font-size:14.5px;line-height:1.4;min-height:44px}
+.task:active{background:var(--soft)}
+.task .bx{width:24px;height:24px;border:2px solid #c7c7cc;border-radius:8px;margin-top:1px;display:flex;align-items:center;justify-content:center;background:#fff}
+.task.on .bx{background:var(--ok);border-color:var(--ok)}
+.task.on .bx svg{stroke:#fff}
+.task.on span{color:var(--muted);text-decoration:line-through}
+.task svg{width:14px;height:14px;stroke:transparent;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.nowc{background:linear-gradient(135deg,#e5f1ff,#f0f7ff);border:1px solid #cfe4ff}
+.nowc .ti{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:2px 0}
+.nowc ul{margin:10px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.nowc li{display:flex;gap:8px;font-size:14.5px}
+.nowc li:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none;margin-top:7px}
+/* timer */
+.timer{text-align:center;padding:22px 16px}
+.timer .ph{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:800}
+.timer .cd{font-size:84px;font-weight:800;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums;margin:6px 0 8px}
+.timer .rd{font-size:15px;color:var(--muted);font-weight:600}
+.timer.p0{background:var(--accent-soft)}.timer.p0 .ph{color:var(--accent)}
+.timer.p1{background:var(--ok-soft)}.timer.p1 .ph{color:#1d7a35}
+.timer.p2{background:var(--warn-soft)}.timer.p2 .ph{color:#8a5a00}
+.timer.idle{background:var(--soft)}
+.phases{display:flex;gap:4px;height:10px;border-radius:99px;overflow:hidden;margin:14px 0 4px}
+.phases i{display:block;background:#dcdce3;position:relative;overflow:hidden}
+.phases i b{position:absolute;inset:0;width:0;background:var(--accent)}
+.phases i.f b{width:100%}
+.plab{display:flex;font-size:11px;color:var(--muted);font-weight:600}
+.ctr{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.ctr .btn{padding:10px 4px;font-size:13px;min-height:44px}
+.ansage{background:#1d1d1f;color:#fff;border-radius:16px;padding:14px 16px;font-size:17px;font-weight:600;line-height:1.4}
+.ansage small{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;font-weight:700;margin-bottom:4px}
+.sollist{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.sollist div{background:var(--soft);border-radius:10px;padding:8px 4px;text-align:center;font-size:12px}
+.sollist div b{display:block;font-size:15px}
+.sollist div.ok{background:var(--ok-soft)}.sollist div.warn{background:var(--warn-soft)}.sollist div.bad{background:var(--bad-soft)}
+.sollist div.cur{outline:2px solid var(--accent)}
+.hint{border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45}
+.hint.warn{background:var(--warn-soft)}.hint.bad{background:var(--bad-soft)}.hint.ok{background:var(--ok-soft)}
+/* tables */
+.tw{overflow-x:auto;margin:0 -16px;padding:0 16px}
+table.plan{border-collapse:separate;border-spacing:4px;font-size:13px;min-width:560px;width:100%}
+table.plan th{background:var(--soft);border-radius:10px;padding:8px 6px;text-align:center;font-size:11.5px}
+table.plan th b{display:block;font-size:16px;color:var(--accent);font-weight:800}
+table.plan td{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 4px;text-align:center;white-space:nowrap}
+table.plan td.r{background:var(--soft);border:0;font-weight:800;font-size:15px}
+table.plan tr.cur td{border-color:var(--accent)}
+table.plan tr.cur td.r{background:var(--accent);color:#fff}
+.tb{display:inline-flex;align-items:center;gap:4px;padding:5px 7px;border-radius:9px;font-weight:700;min-height:36px}
+.tb .dot{width:20px;height:20px;font-size:10px}
+.tb.win{background:var(--ok-soft);box-shadow:inset 0 0 0 2px var(--ok)}
+.vs{color:var(--muted);font-size:10px;margin:0 2px}
+.rank{display:flex;flex-direction:column;gap:6px}
+.rank .ri{display:grid;grid-template-columns:34px 32px 1fr auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.rank .ri .p{font-size:18px;font-weight:800;color:var(--muted);text-align:center}
+.rank .ri.top .p{color:var(--accent)}
+.rank .ri .s{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums}
+/* stations */
+.sbtn{display:grid;grid-template-columns:56px 1fr 24px;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;min-height:72px;text-align:left;width:100%;box-shadow:var(--shadow)}
+.sbtn .l{font-size:30px;font-weight:800;color:var(--accent);letter-spacing:-.03em;text-align:center}
+.sbtn .n{font-weight:700;font-size:16px}
+.sbtn .w{font-size:12.5px;color:var(--muted)}
+.sbtn .chev{color:var(--muted);font-size:22px;text-align:center}
+.resp{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:13px}
+.resp input{border:1px solid var(--line);border-radius:8px;padding:6px 10px;width:100%;max-width:220px;background:#fff;min-height:36px}
+/* speeches */
+.speech{font-size:22px;line-height:1.65}
+.speech p{margin:0 0 18px}
+.cue{display:inline-block;font-size:11px;letter-spacing:.1em;font-weight:700;color:#fff;background:#1d1d1f;padding:3px 9px;border-radius:999px;vertical-align:middle;margin-right:8px;transform:translateY(-2px)}
+.film{background:var(--accent-soft);border-radius:14px;padding:14px;font-weight:700;text-align:center;color:var(--accent);margin:8px 0 18px}
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));z-index:5}
+nav .in{max-width:960px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border-radius:12px;font-size:11px;font-weight:600;color:var(--muted);min-height:56px}
+nav button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--accent);background:var(--accent-soft)}
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:20;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.open{opacity:1;pointer-events:auto}
+.sheet{background:var(--bg);width:100%;max-width:720px;max-height:90%;border-radius:22px 22px 0 0;padding:14px 16px calc(24px + env(safe-area-inset-bottom,0px));overflow:auto;transform:translateY(30px);transition:transform .2s}
+.scrim.open .sheet{transform:none}
+.sheet .sh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;position:sticky;top:0;background:var(--bg);padding:4px 0}
+.sheet h4{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:16px 0 8px;font-weight:700}
+.sheet ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.sheet ol li{display:grid;grid-template-columns:26px 1fr;gap:8px;font-size:15px}
+.sheet ol li span{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-top:1px}
+/* ceremony */
+.cer{position:fixed;inset:0;background:#fff;z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.cer.open{display:flex}
+.cer canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cer .close{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px}
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:720px;align-items:end;margin-top:20px}
+.pod{border-radius:20px;padding:18px 10px;background:var(--soft);min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;transition:all .3s}
+.pod .pl{font-size:13px;font-weight:800;letter-spacing:.1em;color:var(--muted)}
+.pod .dot{width:72px;height:72px;font-size:28px}
+.pod .nm{font-size:18px;font-weight:800;letter-spacing:-.02em}
+.pod .st{font-size:14px;color:var(--muted);font-weight:600}
+.pod.p1{min-height:200px;background:var(--accent-soft)}.pod.p2{min-height:160px}.pod.p3{min-height:130px}
+.pod.hidden-p .dot,.pod.hidden-p .nm,.pod.hidden-p .st{visibility:hidden}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#1d1d1f;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+.small{font-size:13px;color:var(--muted);line-height:1.5}
+.mt{margin-top:16px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div><h1>KSBK-Spiele · Orga</h1><div class="sub">Studientag · 1. Oktober 2026</div></div>
+    <div class="clock"><div class="t" id="clock">--:--:--</div><div class="n" id="nextp"></div></div>
+  </header>
+  <main id="main"></main>
+  <nav aria-label="Bereiche"><div class="in">
+    <button data-v="heute"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Heute</button>
+    <button data-v="halle"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>Halle</button>
+    <button data-v="reden"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Reden</button>
+    <button data-v="stat"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/></svg>Stationen</button>
+    <button data-v="wert"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M6 4h12v4a6 6 0 0 1-12 0zM6 6H3a3 3 0 0 0 3 3M18 6h3a3 3 0 0 1-3 3"/></svg>Wertung</button>
+  </div></nav>
+</div>
+<div class="scrim" id="scrim" role="dialog" aria-modal="true"><div class="sheet" id="sheet"></div></div>
+<div class="cer" id="cer"><canvas id="conf"></canvas><button class="btn sec close" id="cerClose">Schließen</button><div id="cerBody"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA={
+  teams:[{n:1,name:"Rot",hex:"#c8412b",fg:"#fff"},{n:2,name:"Pink",hex:"#c42a6e",fg:"#fff"},{n:3,name:"Orange",hex:"#f09a3e",fg:"#fff"},{n:4,name:"Lila",hex:"#3a2b8c",fg:"#fff"},{n:5,name:"Hellgrün",hex:"#7fe59a",fg:"#1d1d1f"},{n:6,name:"Braun",hex:"#7a4a30",fg:"#fff"},{n:7,name:"Dunkelgrün",hex:"#2f4a32",fg:"#fff"},{n:8,name:"Rosa",hex:"#f3b6c6",fg:"#1d1d1f"},{n:9,name:"Gelb",hex:"#e9d25a",fg:"#1d1d1f"},{n:10,name:"Hellblau",hex:"#5fb2ea",fg:"#1d1d1f"},{n:11,name:"Grau",hex:"#7d7d7d",fg:"#fff"},{n:12,name:"Schwarz",hex:"#151515",fg:"#fff"}],
+  blocks:[
+    {t:"08:00",m:480,title:"Treffen & Aufbau",who:"alle",groups:{
+      "Sporthalle":["Stationen A–F aufbauen: A Tossit und B Cornhole (Feld links) · C Leitergolf und E Gummischeiben-Weitwurf (Feld Mitte) · D Sport-Quiz (Feld rechts) · F Musik erraten (Nebenraum im Keller)","Zwei Musikboxen anschließen und testen","Pro Station Schmierblatt, Stift, Steine · 12 Becher, je einer pro Teamfarbe markiert","Stationsschilder: an jeder Station ein DIN-A4-Blatt mit Buchstabe und Name, sichtbar mit Kreppband ankleben","Station F im Keller: Schild mit Pfeil „Treppe runter“ am Treppenabgang anbringen"],
+      "Aula":["Beamer anschließen, Film testen","Musik anschließen (Einlauf)","Mikro anschließen, Ton testen","Gegenstände für die Bewegungsdemo nach dem Einlauf bereits platzieren","Redeskripte für Nico und Siggi bereitlegen"],
+      "Foyer":["Getränke für den Empfang","Säckchen mit Klebepunkten: 68 Punkte in 12 Farben (8 Farben × 6, 4 Farben × 5)","Handouts, Kreppband und QR-Code-Aushänge (Spieler-Seite) überall aufhängen","Treppchen und Gewinne für die Siegerehrung griffbereit"]}},
+    {t:"09:00",m:540,title:"Empfang mit Getränken im Foyer",who:"alle",tasks:["Getränke ausgeben","Säckchen mit Klebepunkten anbieten – jede Person zieht einen und klebt ihn aufs Oberteil","Handouts auslegen"]},
+    {t:"09:15",m:555,title:"Alle in die Aula bitten",who:"alle",tasks:["Ansage im Foyer","Aula-Technik letzter Check (Beamer, Musik, Mikro)"]},
+    {t:"09:20",m:560,title:"Auftakt in der Aula",who:"Nico, Siggi",tasks:["Einlauf der Sportfachschaft mit Musik","Kurze Bewegungsdemonstration","Ansprache Nico","Film abspielen","Ansprache Siggi"]},
+    {t:"bis 10:00",m:580,title:"Überbrückungszeit",who:"alle",tasks:["Sportlehrkräfte gehen zu ihren Stationen A–F","Andrea übernimmt Musik in der Halle","Becher mit Teamfarben bereitstellen","Steine an den Stationen prüfen"]},
+    {t:"10:00",m:600,title:"Spiele in der Halle",who:"Andrea, Sportlehrkräfte",tasks:["6 Runden à 15 Min. – Rundentimer in „Halle“","Andrea sagt jede Runde mit Steinezahl an","Sportlehrkräfte erklären bei Ankunft","Gewinner bekommt Steine in seinen Becher"]},
+    {t:"11:30",m:690,title:"Spielende",who:"Andrea, Orga",tasks:["Becher einsammeln","Steine auszählen – Ansicht „Wertung“","Treppchen aufbauen","Gewinne bereitlegen","Mikro und Box für die Siegerehrung","Erste Stationen abbauen"]},
+    {t:"11:45",m:705,title:"Siegerehrung",who:"Annette",tasks:["Moderation","Platz 3, 2, 1","Foto vom Gewinnerteam"]},
+    {t:"12:00–12:30",m:720,title:"Aufbruch zum Restaurant Lavendel",who:"alle",tasks:["Restlicher Abbau Halle, Aula, Foyer","Technik einpacken","Halle abschließen"]},
+    {t:"13:00",m:780,title:"Mittagessen im Restaurant Lavendel",who:"alle",tasks:["Bonnstraße 106, 50321 Brühl","Reservierung 68 Personen"]},
+    {t:"15:00",m:900,title:"Offenes Ende",who:"",tasks:[]}],
+  roles:[["Nico","Moderation","Begrüßung und Bewegungsrunde in der Aula, Übergabe an den Film."],["Siggi","Spielregeln","Ansprache nach dem Film: Stationen, Teams, Punkte, Zeitplan, Laufzettel."],["Andrea","Halle","Musik, Ansage jeder Runde mit Steinezahl, Wechsel ansagen, sammelt um 11:30 die Becher ein."],["Annette","Siegerehrung","Moderiert um 11:45 die Siegerehrung und übergibt die Gewinne."],["Sportlehrkräfte","Stationen","Je eine Person pro Station A–F, erklärt das Spiel bei Ankunft der Teams, vergibt die Steine."]],
+  speeches:[
+    {who:"Nico",sub:"Begrüßung und Bewegungsrunde · 09:20, nach Einlauf und Bewegungsdemo",after:"Film abspielen",paras:[
+      [null,"Wir, die Sportfachschaft, begrüßen euch zu den KSBK-Spielen und damit zum Lehrer-Studientag 2026. Um euch ganz nach dem Motto unseres Fachs erst einmal in Bewegung zu bringen, bitten wir euch, einmal aufzustehen."],
+      ["ALLE STEHEN","Ihr dürft euch gegenseitig unterstützen, falls es dem einen oder anderen zu wackelig ist. Bitte stellt euch auf euer linkes Bein und macht mit eurem rechten einen Kreis im Uhrzeigersinn. Schaut einmal kurz, ob euer Nachbar das richtige Bein – links – auf dem Boden stehen hat und mit dem rechten im Uhrzeigersinn kreist. Nun malt mit eurer rechten Hand eine Sechs in die Luft und schaut, was passiert."],
+      [null,"Verrückt, oder? Der Körper macht einfach nicht, was man will. Aber keine Sorge, das ist ganz normal und hängt damit zusammen, dass wir auf der gleichen Körperhälfte, also rechts, zwei verschiedene Dinge tun. Ihr werdet merken: Wenn ihr den Kreis mit dem linken Fuß im Uhrzeigersinn malt, könnt ihr die Sechs deutlich leichter malen."],
+      ["ÜBUNG 2","Wir machen noch eine weitere Übung, und dann seid ihr bereit für die KSBK-Spiele. Dafür machen wir mit der linken Hand einen Hasen. Der läuft immer von links nach rechts und wieder zurück. Mit der rechten Hand machen wir den Jäger, der mit der geladenen Pistole auf den Hasen zielt. Und nun schauen wir, wer es schafft, den Hasen erfolgreich zu jagen: Dafür muss die Pistole immer geladen sein und auf den Hasen zeigen, während er wegläuft."],
+      [null,"Gut – und jetzt erlöse ich euch von der ersten sportlichen Einheit, mit der wir Teile eures Körpers, aber besonders das Gehirn aufgewärmt haben. Denn ihr werdet gleich sehen, dass es bei den heutigen Wettkampfspielen eher um Feinmotorik und Schnelligkeit im Kopf geht – weshalb wir uns ganz sicher sind, dass die Spiele für alle von euch machbar sind."],
+      ["ALLE SETZEN SICH","Nun dürft ihr Platz nehmen und etwas ausruhen, während ihr die heutigen Spiele vorgestellt bekommt."]]},
+    {who:"Siggi",sub:"Spielregeln, Teams, Punkte und Zeitplan · direkt nach dem Film",after:null,paras:[
+      [null,"Ihr habt nun alle Spiele gesehen – und keine Sorge, bevor ihr beginnt, gibt es immer noch einmal eine kurze Erläuterung des Spiels in der Halle. Wir haben sechs Stationen, A bis F, die ihr auf dem Hallenplan wiederfindet. Den Hallenplan und alle Erläuterungen zum heutigen Tag findet ihr über den QR-Code, der überall ausgehängt ist."],
+      ["TEAMS","Zu Beginn habt ihr alle einen farbigen Klebepunkt erhalten, wodurch wir insgesamt zwölf Teams erstellt haben. Diese Teams spielen an den Stationen immer für etwa sieben Minuten gegeneinander. Beim ersten Spiel bekommt der Gewinner einen Punkt, beim zweiten Spiel gewinnt man zwei Punkte, beim dritten drei – und so weiter. Die Musik wird euch immer verraten, wann Spielzeit ist und wann nicht. Das Wichtigste ist aber, dass ihr einfach Spaß habt und in der Zeit einen klaren Gewinner erspielt."],
+      ["ZEITPLAN","Um Punkt zehn Uhr starten die Spiele in der Halle, und wir sind dann anderthalb Stunden in der Halle. Bitte nutzt die Zeit also noch einmal, um auf Toilette zu gehen, zu rauchen und euer Team zu finden."],
+      ["LAUFZETTEL","Im Handout findet ihr ebenfalls einen Laufzettel für eure Farbe: wo ihr beginnt und wo ihr danach weiterspielt. Probiert, die Wechsel zwischen den Spielen möglichst schnell zu vollziehen, und integriert jeden Spieler. Außer bei den Quizzen muss immer eine Reihenfolge eingehalten werden, sodass kein Spieler doppelt dran ist, bevor nicht jeder aus dem Team einmal gespielt hat."]]}],
+  stations:{
+    A:{name:"Tossit",where:"Feld links",form:"5 gegen 5",desc:"Das Boule-Prinzip mit Saugnapf-Pfeilen: Platziert euren Wurfpfeil möglichst nah am schwarzen Marker.",steps:["Alle stellen sich hinter die Startlinie; jede und jeder erhält einen Wurfpfeil.","Ein Team beginnt und wirft den schwarzen Marker auf den Boden.","Danach werfen die Teams abwechselnd ihre Pfeile – so nah wie möglich an den Marker.","Alle Pfeile bleiben stehen bzw. liegen, bis die Runde beendet ist.","Es gewinnt das Team, dessen Pfeil dem Marker am nächsten ist. Umgefallene, nicht haftende Pfeile zählen nicht."],win:"Gespielt wird, bis die Musik endet. Das Team mit den meisten gewonnenen Durchgängen bekommt die Steine der Runde.",mat:["Tossit-Spiel mit min. 11 Pfeilen","Startlinie","Schmierblatt & Stift"]},
+    B:{name:"Cornhole",where:"Feld links",form:"5 gegen 5",desc:"Werft eure Säckchen so, dass sie auf dem schrägen Holzbrett liegen bleiben – am besten direkt im Loch.",steps:["Alle stellen sich hinter die Startlinie. Jedes Teammitglied erhält ein Säckchen in der eigenen Teamfarbe.","Die Teams werfen immer abwechselnd.","Alle Säckchen bleiben liegen, bis die Runde beendet ist.","Punkte: auf dem Brett 1 Punkt, auf der roten Fläche 2 Punkte, im Loch 3 Punkte.","Schubst ihr ein gegnerisches Säckchen ins Loch, zählen die Punkte für den Gegner.","Berührt ein Säckchen zuerst den Boden, zählt es nicht und wird vom Brett entfernt."],win:"Das Team mit den meisten gewonnenen Durchgängen bekommt die Steine – bei Gleichstand entscheidet die Gesamtpunktzahl.",mat:["Cornhole-Brett","Säckchen in 2 Farben","Startlinie","Schmierblatt & Stift"]},
+    C:{name:"Leitergolf",where:"Feld Mitte",form:"1 gegen 1",desc:"Werft die Bolas – zwei durch eine Schnur verbundene Bälle – so, dass sie sich um eine Leitersprosse wickeln. Wer zuerst exakt 15 Punkte hat, gewinnt.",steps:["Ihr werft abwechselnd von der 5-Meter-Linie. Die Bolas müssen sich um eine Sprosse wickeln und hängen bleiben.","Punkte: oberste Sprosse 3, mittlere 2, unterste 1 Punkt.","Gezählt wird erst am Rundenende – bereits hängende Bolas dürfen also heruntergeworfen werden.","Überwerfen-Risiko: Die 15 muss exakt getroffen werden. Wer darüber liegt, verliert die Punkte des letzten Wurfs."],win:"Das Team mit den meisten gewonnenen Durchgängen bekommt die Steine.",mat:["Leitergolf-Gerüst","6 Bolas","5-m-Startlinie","Schmierblatt & Stift"]},
+    D:{name:"Sport-Quiz",where:"Feld rechts",form:"5 gegen 5",desc:"16 Fragen rund um Sport und Freizeit – beraten, abstimmen und als Team die richtige Antwort wählen: A, B, C oder D?",steps:["Die Fragen werden den Teams abwechselnd gestellt – insgesamt 16 Fragen, also 8 pro Team.","Pro Frage gibt es die Antwortmöglichkeiten A, B, C und D und 30 Sekunden Beratungszeit.","Das Team gibt eine abgestimmte Antwort. Bei falscher Antwort darf das gegnerische Team übernehmen.","Bei Punktgleichheit entscheidet eine Schätzfrage: Wer näher an der Lösung liegt, gewinnt."],win:"Das Team mit den meisten richtigen Antworten bekommt die Steine.",mat:["Trivial-Pursuit-Karten","Stoppuhr/Handy","Schmierblatt & Stift"]},
+    E:{name:"Gummischeiben-Weitwurf",where:"Feld Mitte",form:"1 gegen 1",desc:"Acht Scheiben, acht Würfe – und jeder Wurf muss etwas weiter fliegen als der davor. Hier gewinnt Feingefühl, nicht Kraft.",steps:["Ihr steht hinter der Startlinie und werft eure ca. 8 Gummischeiben nacheinander in den Korridor.","Jede Scheibe muss weiter landen als die vorherige – dosiert eure Kraft also klug.","Landet eine Scheibe überlappend auf der vorherigen, zählt der Wurf.","Ist ein Wurf zu kurz oder verlässt er den Pylonen-Korridor, ist die Runde für euch verloren."],win:"Das Team mit den meisten gewonnenen Durchgängen bekommt die Steine.",mat:["2×8 Gummischeiben","Pylonen","Startlinie","Schmierblatt & Stift"]},
+    F:{name:"Musik erraten",where:"Nebenraum im Keller · Treppe runter",form:"1 gegen 1",desc:"Bekannte Songs, zwei Buzzer, schnelle Ohren: Wer zuerst drückt, nennt Titel und Interpret – und holt den Punkt.",steps:["Zwei Teams treten in 1-gegen-1-Duellen an – jede und jeder kommt an die Reihe.","Über die Hitstar-App werden bekannte Songs abgespielt.","Wer zuerst buzzert, hat das Antwortrecht und nennt Titel und Interpret.","Falsch oder unvollständig? Dann darf das gegnerische Team ergänzen und den Punkt gewinnen.","Optional: Zusatzpunkt für das Erscheinungsjahr – maximal 4 Jahre Abweichung erlaubt."],win:"Das Team mit den meisten gewonnenen Runden bekommt die Steine.",mat:["2 Buzzer (+1 Ersatz)","Hitstar-App mit 30 Songs","Schmierblatt & Stift"]}},
+  order:"ABCDEF",
+  plan:[{A:[1,2],B:[9,10],C:[3,4],D:[7,8],E:[11,12],F:[5,6]},{A:[7,12],B:[6,11],C:[1,9],D:[4,10],E:[5,8],F:[2,3]},{A:[3,5],B:[1,7],C:[2,8],D:[9,12],E:[6,10],F:[4,11]},{A:[9,11],B:[3,8],C:[5,12],D:[2,6],E:[1,4],F:[7,10]},{A:[8,10],B:[4,5],C:[6,7],D:[3,11],E:[2,9],F:[1,12]},{A:[4,6],B:[2,12],C:[10,11],D:[1,5],E:[3,7],F:[8,9]}],
+  roundStart:600, roundMin:15, phases:[3,7,5]
+};
+
+/* ---------- state ---------- */
+const KEY='ksbk-orga-v1';
+let S={done:{},resp:{},mat:{},wins:{},stones:{},font:22,timer:{round:1,startedAt:null,pausedAt:null,playMin:7,starts:{}}};
+try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);S={...S,...o,timer:{...S.timer,...(o.timer||{})}}}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=s=>document.querySelector(s), main=$('#main');
+const T=n=>DATA.teams[n-1];
+const dot=(n,sz=24,fs=11)=>{const t=T(n);return `<span class="dot" style="background:${t.hex};color:${t.fg};width:${sz}px;height:${sz}px;font-size:${fs}px">${n}</span>`};
+const hm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(Math.floor(m%60)).padStart(2,'0');
+const mmss=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+
+/* ---------- clock (with simulation) ---------- */
+let simOffset=0;
+(function(){let h=null;const q=location.search.match(/[?&]t=(\d{1,2}):(\d{2})/);const g=location.hash.match(/^#t(\d{2})(\d{2})$/);const m=q||g;
+  if(m){const d=new Date();const target=new Date(d);target.setHours(+m[1],+m[2],0,0);simOffset=target-d}})();
+const now=()=>new Date(Date.now()+simOffset);
+const nowMin=()=>{const d=now();return d.getHours()*60+d.getMinutes()+d.getSeconds()/60};
+function curBlockIdx(){const m=nowMin();let i=-1;DATA.blocks.forEach((b,k)=>{if(m>=b.m)i=k});return i}
+const short=t=>({'Treffen & Aufbau':'Aufbau','Empfang mit Getränken im Foyer':'Empfang Foyer','Alle in die Aula bitten':'In die Aula','Auftakt in der Aula':'Auftakt Aula','Überbrückungszeit':'Überbrückung','Spiele in der Halle':'Spiele Halle','Spielende':'Spielende','Siegerehrung':'Siegerehrung','Aufbruch zum Restaurant Lavendel':'Aufbruch Lavendel','Mittagessen im Restaurant Lavendel':'Mittagessen','Offenes Ende':'Ende'})[t]||t;
+function tickClock(){const d=now();$('#clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+  const i=curBlockIdx(),m=nowMin();const el=$('#nextp');
+  if(i<0){const b=DATA.blocks[0];el.className='n';el.innerHTML=`→ <b>${b.t} ${short(b.title)}</b> · in ${Math.ceil(b.m-m)} min`}
+  else if(i>=DATA.blocks.length-1){el.className='n';el.innerHTML='<b>Offenes Ende</b> · alles geschafft'}
+  else{const nb=DATA.blocks[i+1];const left=nb.m-m;el.className='n'+(left<0?' late':'');el.innerHTML=left>=0?`→ <b>${nb.t.replace('bis ','').split('–')[0]} ${short(nb.title)}</b> · in ${Math.ceil(left)} min`:`<b>${short(nb.title)}</b> überzogen <b>+${Math.ceil(-left)} min</b>`}}
+setInterval(tickClock,1000);tickClock();
+
+/* ---------- nav ---------- */
+let view='heute';
+function setView(v){view=v;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));render();window.scrollTo({top:0})}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>setView(b.dataset.v));
+let raf=null;
+function render(){cancelAnimationFrame(raf);clearInterval(render._iv);({heute:renderHeute,halle:renderHalle,reden:renderReden,stat:renderStat,wert:renderWert})[view]()}
+
+/* ---------- Heute ---------- */
+function blockTasks(b,bi){const out=[];if(b.groups){Object.entries(b.groups).forEach(([g,list])=>list.forEach((t,i)=>out.push({id:`${bi}-${g}-${i}`,g,t})))}else b.tasks.forEach((t,i)=>out.push({id:`${bi}-${i}`,t}));return out}
+function renderHeute(){
+  const ci=curBlockIdx();
+  const cb=DATA.blocks[Math.max(0,ci)];const open=blockTasks(cb,Math.max(0,ci)).filter(x=>!S.done[x.id]).slice(0,3);
+  main.innerHTML=`<div class="row" style="justify-content:space-between"><span class="pill">Heute · 1. Oktober</span><button class="btn ghost" id="rolesBtn">Rollen</button></div>
+  <h2>Der Tag.</h2>
+  <div class="two">
+  <div class="stack">
+  <div class="card nowc"><div class="tag">Jetzt dran · ${cb.t}</div><div class="ti">${cb.title}</div><div class="small">${cb.who?'Zuständig: '+cb.who:''}</div>
+  ${open.length?`<ul>${open.map(x=>`<li>${x.t}</li>`).join('')}</ul>`:'<div class="small mt" style="margin-top:8px">Alle Aufgaben dieses Blocks sind erledigt.</div>'}
+  <button class="btn sec mt" id="jumpCur" style="width:100%">Zum Block</button></div>
+  <div id="blocksA" class="stack"></div></div>
+  <div id="blocksB" class="stack"></div></div>
+  <div class="mt" style="text-align:center"><button class="btn ghost" id="resetBtn" style="color:var(--muted)">Alles zurücksetzen</button></div>`;
+  const cols=[$('#blocksA'),$('#blocksB')];
+  DATA.blocks.forEach((b,bi)=>{const tasks=blockTasks(b,bi);const done=tasks.filter(x=>S.done[x.id]).length;const cls=bi===ci?'cur':bi<ci?'past':'';
+    const el=document.createElement('div');el.className='blk '+cls;el.id='blk'+bi;
+    let body='';if(b.groups){let g='';tasks.forEach(x=>{if(x.g!==g){g=x.g;body+=`<div class="grp">${g}</div>`}body+=taskHtml(x)})}else body=tasks.map(taskHtml).join('');
+    el.innerHTML=`<div class="hd"><div class="tm ${b.t.length>5?'sm':''}">${b.t}</div><div><div class="ti">${b.title}</div>${b.who?`<div class="wh">${b.who}</div>`:''}</div>${tasks.length?`<div class="cnt ${done===tasks.length?'done':''}">${done} von ${tasks.length}</div>`:''}</div>
+    ${tasks.length?`<div class="prog"><i style="width:${100*done/tasks.length}%"></i></div><div class="tasks">${body}</div>`:''}`;
+    (bi<=4?cols[0]:cols[1]).appendChild(el)});
+  main.querySelectorAll('.task').forEach(t=>t.onclick=()=>{S.done[t.dataset.id]=!S.done[t.dataset.id];save();renderHeute()});
+  $('#jumpCur').onclick=()=>{const el=$('#blk'+Math.max(0,ci));el&&el.scrollIntoView({behavior:'smooth',block:'start'})};
+  $('#rolesBtn').onclick=()=>openSheet(`<span class="pill">Wer macht was</span><div class="stack mt">${DATA.roles.map(r=>`<div class="card"><div class="tag">${r[1]}</div><h3 style="margin:8px 0 4px">${r[0]}</h3><div class="small">${r[2]}</div></div>`).join('')}</div>`);
+  $('#resetBtn').onclick=()=>openSheet(`<h3>Alles zurücksetzen?</h3><p class="small">Abgehakte Aufgaben, Timer, Sieger und Verantwortliche auf diesem Gerät werden gelöscht.</p><div class="row mt"><button class="btn danger" id="resetYes">Ja, zurücksetzen</button><button class="btn sec" id="resetNo">Abbrechen</button></div>`,()=>{$('#resetYes').onclick=()=>{S={done:{},resp:{},mat:{},wins:{},stones:{},font:22,timer:{round:1,startedAt:null,pausedAt:null,playMin:7,starts:{}}};save();closeSheet();render();toast('Zurückgesetzt')};$('#resetNo').onclick=closeSheet});
+}
+const taskHtml=x=>`<button class="task ${S.done[x.id]?'on':''}" data-id="${x.id}"><span class="bx"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L19 7"/></svg></span><span>${x.t}</span></button>`;
+
+/* ---------- Halle / Timer ---------- */
+function phaseDur(){return [DATA.phases[0]*60,S.timer.playMin*60,DATA.phases[2]*60]}
+function timerState(){const t=S.timer;if(!t.startedAt)return{state:'idle'};const end=t.pausedAt||Date.now();let el=(end-t.startedAt)/1000;const d=phaseDur();let p=0;while(p<3&&el>=d[p]){el-=d[p];p++}
+  if(p>=3)return{state:'done'};return{state:t.pausedAt?'paused':'run',phase:p,left:d[p]-el,elapsed:el,dur:d}}
+let lastPhase=null,audioCtx=null;
+function beep(n=2){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();for(let i=0;i<n;i++){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=880;g.gain.value=.2;o.start(audioCtx.currentTime+i*.25);o.stop(audioCtx.currentTime+i*.25+.15)}}catch(e){}
+  try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}
+function renderHalle(){
+  clearInterval(render._iv);const t=S.timer;const r=t.round;
+  main.innerHTML=`<span class="pill">Sporthalle · Zeitwächter</span><h2>Die Runden.</h2>
+  <div class="two"><div class="stack">
+  <div class="ansage" id="ansage"></div>
+  <div class="card" style="padding:0;overflow:hidden"><div class="timer idle" id="timer"></div><div style="padding:14px 16px"><div class="phases" id="phases"></div><div class="plab"><span style="flex:3">Erklären ${DATA.phases[0]} min</span><span style="flex:${t.playMin};text-align:center">Spielen ${t.playMin} min</span><span style="flex:5;text-align:right">Wechsel ${DATA.phases[2]} min</span></div>
+  <div id="tbtn" style="margin-top:14px"></div><div class="ctr" id="ctr"></div></div></div>
+  <div id="soll"></div></div>
+  <div class="stack"><div class="card"><h3>Spielplan</h3><p class="small" style="margin:4px 0 8px">Aktuelle Runde hervorgehoben. Nach rechts wischen für alle Stationen.</p><div class="tw">${planTable(r)}</div></div>
+  <div class="card"><h3>Soll-Zeiten</h3><div class="sollist mt" id="sollist"></div><p class="small" style="margin:10px 0 0">Runde n beginnt planmäßig um 10:00 + (n−1) · 15 min. Die Uhrzeiten sind Orientierung – gestartet wird per Tap.</p></div></div></div>`;
+  const draw=()=>{
+    const st=timerState();const timerEl=$('#timer');const names=['Erklären','Spielen','Wechsel'];
+    if(st.state==='idle'){timerEl.className='timer idle';timerEl.innerHTML=r>6?`<div class="ph">Fertig</div><div class="cd" style="font-size:40px">Alle 6 Runden gespielt</div><div class="rd">Becher einsammeln · Wertung eintragen</div>`:`<div class="ph">Bereit</div><div class="cd">${mmss(phaseDur()[0])}</div><div class="rd">Runde ${r} von 6 · ${r} Stein${r>1?'e':''} für den Sieger</div>`}
+    else if(st.state==='done'){timerEl.className='timer idle';timerEl.innerHTML=`<div class="ph">Runde ${r} beendet</div><div class="cd" style="font-size:40px">Nächste Runde starten</div>`}
+    else{timerEl.className='timer p'+st.phase;timerEl.innerHTML=`<div class="ph">${names[st.phase]}${st.state==='paused'?' · Pause':''}</div><div class="cd">${mmss(st.left)}</div><div class="rd">Runde ${r} von 6 · ${r} Stein${r>1?'e':''} · ${st.phase<2?'dann '+names[st.phase+1]:'dann Runde '+(r+1)+' starten'}</div>`;
+      if(lastPhase!==null&&lastPhase!==st.phase&&st.state==='run')beep(st.phase===2?3:2);lastPhase=st.phase}
+    if(st.state==='idle'||st.state==='done')lastPhase=null;
+    // phases bar
+    const d=phaseDur();$('#phases').innerHTML=[0,1,2].map(p=>{let w=0;if(st.state==='run'||st.state==='paused'){w=p<st.phase?100:p===st.phase?100*(1-st.left/d[p]):0}else if(st.state==='done')w=100;return `<i style="flex:${d[p]}"><b style="width:${w}%"></b></i>`}).join('');
+    // buttons
+    const tb=$('#tbtn'),ctr=$('#ctr');
+    if(st.state==='idle'&&r<=6){tb.innerHTML=`<button class="btn big" id="start">Runde ${r} starten</button>`;ctr.innerHTML=r>1?`<button class="btn sec" id="prevR" style="grid-column:span 4">← zurück zu Runde ${r-1}</button>`:'';
+      $('#start').onclick=()=>{beep(1);S.timer.startedAt=Date.now();S.timer.pausedAt=null;S.timer.starts[r]=nowMin();save();draw()};const p=$('#prevR');if(p)p.onclick=()=>{S.timer.round--;save();renderHalle()}}
+    else if(st.state==='done'||r>6){tb.innerHTML=r<6?`<button class="btn big" id="next">Runde ${r+1} starten</button>`:r===6?`<button class="btn big" id="finish">Spiele beenden</button>`:'';ctr.innerHTML=`<button class="btn sec" id="redo" style="grid-column:span 4">Runde ${Math.min(r,6)} wiederholen</button>`;
+      const n=$('#next');if(n)n.onclick=()=>{S.timer.round++;S.timer.startedAt=Date.now();S.timer.pausedAt=null;S.timer.starts[S.timer.round]=nowMin();save();beep(1);renderHalle()};
+      const f=$('#finish');if(f)f.onclick=()=>{S.timer.round=7;S.timer.startedAt=null;save();renderHalle()};
+      $('#redo').onclick=()=>{S.timer.round=Math.min(r,6);S.timer.startedAt=null;S.timer.pausedAt=null;save();renderHalle()}}
+    else{tb.innerHTML='';ctr.innerHTML=`<button class="btn sec" id="pause">${st.state==='paused'?'Weiter':'Pause'}</button><button class="btn sec" id="plus">+30 s</button><button class="btn sec" id="skip">Phase ⏭</button><button class="btn danger" id="rst">Reset</button>`;
+      $('#pause').onclick=()=>{if(S.timer.pausedAt){S.timer.startedAt+=Date.now()-S.timer.pausedAt;S.timer.pausedAt=null}else S.timer.pausedAt=Date.now();save();draw()};
+      $('#plus').onclick=()=>{S.timer.startedAt+=30000;save();draw()};
+      $('#skip').onclick=()=>{S.timer.startedAt-=st.left*1000+50;save();draw()};
+      $('#rst').onclick=()=>{S.timer.startedAt=null;S.timer.pausedAt=null;save();draw()}}
+    // ansage
+    const rr=Math.min(r,6);$('#ansage').innerHTML=r>6?`<small>Ansage</small>Die Spiele sind beendet – bitte bringt eure Becher zu Andrea!`:`<small>Ansage vor Runde ${rr} · Andrea</small>„Runde ${rr} – heute gibt es ${rr} Stein${rr>1?'e':''}! Bitte an die Stationen.“`;
+    // soll/ist
+    let soll='';const rs=S.timer.starts[Math.min(r,6)];const sollM=DATA.roundStart+(Math.min(r,6)-1)*DATA.roundMin;
+    if(rs!=null&&r<=6){const diff=Math.round(rs-sollM);const cls=diff>=6?'bad':diff>=3?'warn':'ok';
+      soll=`<div class="hint ${cls}"><b>Runde ${r} · Soll ${hm(sollM)} · gestartet ${hm(rs)} · ${diff>=0?'+':''}${diff} min</b>${diff>=3?`<div style="margin-top:6px">Ihr liegt hinten. Wechselphase verkürzen oder die Spielzeit der nächsten Runde auf 6 Minuten setzen.</div><div class="row mt" style="margin-top:8px"><button class="btn sec" id="play6">Spielzeit ab nächster Runde: ${S.timer.playMin===6?'wieder 7':'6'} min</button></div>`:'<div style="margin-top:4px">Im Plan.</div>'}</div>`}
+    else if(r<=6){const m=nowMin();const diff=Math.round(m-sollM);soll=`<div class="hint ${diff>=6?'bad':diff>=3?'warn':'ok'}"><b>Runde ${r} · Soll ${hm(sollM)}</b> · ${diff<0?'noch '+(-diff)+' min':diff===0?'jetzt':'seit '+diff+' min fällig'}</div>`}
+    $('#soll').innerHTML=soll;const p6=$('#play6');if(p6)p6.onclick=()=>{S.timer.playMin=S.timer.playMin===6?7:6;save();renderHalle()};
+    $('#sollist').innerHTML=[1,2,3,4,5,6].map(i=>{const sm=DATA.roundStart+(i-1)*DATA.roundMin;const s=S.timer.starts[i];let cls='';if(s!=null){const df=Math.round(s-sm);cls=df>=6?'bad':df>=3?'warn':'ok'}return `<div class="${cls} ${i===r?'cur':''}"><b>R${i}</b>${hm(sm)}${s!=null?`<br><span style="font-size:10px">ist ${hm(s)}</span>`:''}</div>`}).join('');
+  };
+  draw();render._iv=setInterval(draw,500);
+}
+function planTable(cur,wert=false){
+  return `<table class="plan"><thead><tr><th>Runde</th>${DATA.order.split('').map(s=>`<th><b>${s}</b>${DATA.stations[s].name.replace('Gummischeiben-Weitwurf','Gummisch.')}</th>`).join('')}</tr></thead><tbody>${DATA.plan.map((r,i)=>`<tr class="${i+1===cur?'cur':''}"><td class="r">${i+1}<div style="font-size:10px;font-weight:600;opacity:.7">${hm(DATA.roundStart+i*DATA.roundMin)}</div></td>${DATA.order.split('').map(s=>{const [a,b]=r[s];const k=`${i+1}${s}`;const w=S.wins[k];return wert?`<td><button class="tb ${w===a?'win':''}" data-k="${k}" data-t="${a}">${dot(a,20,10)}${a}</button><span class="vs">vs</span><button class="tb ${w===b?'win':''}" data-k="${k}" data-t="${b}">${dot(b,20,10)}${b}</button></td>`:`<td>${dot(a,16,9)} <b>${a}</b><span class="vs">vs</span>${dot(b,16,9)} <b>${b}</b></td>`}).join('')}</tr>`).join('')}</tbody></table>`}
+
+/* ---------- Reden ---------- */
+function renderReden(){
+  main.innerHTML=`<span class="pill">Aula · 09:20</span><h2>Die Reden.</h2><p class="lead">Tippe auf eine Rede für den Vorlese-Modus mit großer Schrift.</p>
+  <div class="two">${DATA.speeches.map((s,i)=>`<button class="card" data-i="${i}" style="text-align:left"><div class="tag">Redeskript ${i+1}</div><h3 style="margin:8px 0 4px;font-size:22px">${s.who}</h3><div class="small">${s.sub}</div><div class="small mt" style="color:var(--accent);font-weight:700">Öffnen →</div></button>`).join('')}</div>
+  <div class="card mt"><h3>Ablauf in der Aula</h3><ol class="mt" style="margin:8px 0 0;padding-left:20px;font-size:15px;line-height:1.6"><li>Einlauf der Sportfachschaft mit Musik</li><li>Kurze Bewegungsdemonstration</li><li>Ansprache Nico</li><li>Film abspielen</li><li>Ansprache Siggi</li><li>Überbrückungszeit bis 10:00</li></ol></div>`;
+  main.querySelectorAll('.card[data-i]').forEach(b=>b.onclick=()=>openSpeech(+b.dataset.i));
+}
+function openSpeech(i){const s=DATA.speeches[i];
+  const body=()=>`<div class="sh"><div class="row"><button class="btn sec" id="fm">A−</button><button class="btn sec" id="fp">A+</button></div><button class="btn sec" id="shClose">Schließen</button></div>
+  <div class="tag">${s.who} · Redeskript</div><h3 style="margin:8px 0 14px;font-size:24px">${s.sub}</h3>
+  <div class="speech" style="font-size:${S.font}px">${s.paras.map(p=>`<p>${p[0]?`<span class="cue">${p[0]}</span>`:''}${p[1]}</p>`).join('')}</div>${s.after?`<div class="film">→ ${s.after}</div>`:''}`;
+  openSheet(body(),()=>{$('#fm').onclick=()=>{S.font=Math.max(16,S.font-2);save();$('.speech').style.fontSize=S.font+'px'};$('#fp').onclick=()=>{S.font=Math.min(36,S.font+2);save();$('.speech').style.fontSize=S.font+'px'}});}
+
+/* ---------- Stationen ---------- */
+function renderStat(){
+  main.innerHTML=`<span class="pill">Sechs Stationen</span><h2>Die Stationen.</h2><p class="lead">Regeln, Material und wer die Station betreut.</p>
+  <div class="two">${DATA.order.split('').map(s=>{const st=DATA.stations[s];return `<div class="card" style="padding:12px"><button class="sbtn" data-s="${s}" style="border:0;box-shadow:none;padding:0;min-height:56px"><span class="l">${s}</span><span><span class="n">${st.name}</span><br><span class="w">${st.form} · ${st.where}</span></span><span class="chev">›</span></button>
+  <div class="resp"><span class="small">Betreuung:</span><input id="resp${s}" placeholder="Name eintragen" value="${(S.resp[s]||'').replace(/"/g,'&quot;')}" aria-label="Betreuung Station ${s}"></div></div>`}).join('')}</div>
+  <div class="card mt"><h3>Stationsschilder</h3><p class="small" style="margin:6px 0 0">An jeder Station ein DIN-A4-Blatt mit Buchstabe und Name, sichtbar mit Kreppband angeklebt. Bei Station F zusätzlich ein Schild mit Pfeil „Treppe runter“ am Treppenabgang.</p></div>`;
+  main.querySelectorAll('.sbtn').forEach(b=>b.onclick=()=>openStation(b.dataset.s));
+  main.querySelectorAll('input[id^=resp]').forEach(i=>i.oninput=()=>{S.resp[i.id.slice(4)]=i.value;save()});
+}
+function openStation(s){const st=DATA.stations[s];
+  openSheet(`<div class="sh"><span class="pill">Station ${s} · ${st.form}</span><button class="btn sec" id="shClose">Schließen</button></div>
+  <div style="font-size:56px;font-weight:800;color:var(--accent);letter-spacing:-.04em;line-height:1">${s}</div><h3 style="font-size:24px;margin:4px 0">${st.name}</h3><p class="small" style="margin:0 0 6px">${st.where}${S.resp[s]?' · Betreuung: '+S.resp[s]:''}</p><p style="margin:0">${st.desc}</p>
+  <h4>So wird gespielt</h4><ol>${st.steps.map((x,i)=>`<li><span>${i+1}</span><div>${x}</div></li>`).join('')}</ol>
+  <h4>So holt ihr die Steine</h4><p style="margin:0">${st.win}</p>
+  <h4>Material</h4><div class="tasks" style="padding:0">${st.mat.map((m,i)=>{const id=`mat-${s}-${i}`;return `<button class="task ${S.mat[id]?'on':''}" data-m="${id}"><span class="bx"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L19 7"/></svg></span><span>${m}</span></button>`}).join('')}</div>`,
+  ()=>{$('#sheet').querySelectorAll('.task').forEach(t=>t.onclick=()=>{S.mat[t.dataset.m]=!S.mat[t.dataset.m];save();t.classList.toggle('on')})});}
+
+/* ---------- Wertung ---------- */
+function ranking(){const pts={};DATA.teams.forEach(t=>pts[t.n]=0);Object.entries(S.wins).forEach(([k,w])=>{if(w)pts[w]+=+k[0]});
+  const arr=DATA.teams.map(t=>({n:t.n,p:(S.stones||{})[t.n]!=null?+S.stones[t.n]:pts[t.n],manual:(S.stones||{})[t.n]!=null})).sort((a,b)=>b.p-a.p||a.n-b.n);let place=0,prev=null;arr.forEach((x,i)=>{if(x.p!==prev){place=i+1;prev=x.p}x.place=place});return arr}
+function renderWert(){
+  const rk=ranking();const anyWin=rk.some(x=>x.p>0);
+  main.innerHTML=`<span class="pill">Steine &amp; Rangliste</span><h2>Die Wertung.</h2><p class="lead">Steine pro Team eintragen – mit <b>−</b> / <b>+</b> oder direkt ins Feld tippen. Die Rangliste sortiert sich sofort.</p>
+  <div class="two"><div class="card"><div class="row" style="justify-content:space-between"><h3>Rangliste</h3><span class="small">${rk.filter(x=>x.p>0).length} Teams mit Steinen</span></div>
+  <div class="rank mt" id="rank">${rk.map(x=>`<div class="ri ${x.place<=3&&x.p>0?'top':''}" style="grid-template-columns:30px 30px 1fr auto"><div class="p">${x.place}.</div>${dot(x.n,30,13)}<div><b>${T(x.n).name}</b><div class="small">Team ${x.n}</div></div>
+  <div class="row" style="gap:4px;flex-wrap:nowrap"><button class="btn sec" data-d="-1" data-n="${x.n}" style="min-height:40px;width:40px;padding:0;font-size:20px" aria-label="Team ${x.n} minus">−</button><input type="number" inputmode="numeric" min="0" max="99" value="${x.p}" data-n="${x.n}" aria-label="Steine Team ${x.n}" style="width:52px;text-align:center;font-weight:800;font-size:18px;border:1px solid var(--line);border-radius:10px;min-height:40px;background:#fff"><button class="btn sec" data-d="1" data-n="${x.n}" style="min-height:40px;width:40px;padding:0;font-size:20px" aria-label="Team ${x.n} plus">+</button></div></div>`).join('')}</div>
+  <div class="row mt"><button class="btn" id="cerBtn" ${anyWin?'':'disabled style="opacity:.5"'}>Siegerehrung</button><button class="btn sec" id="copyBtn">Als Text kopieren</button></div></div>
+  <div class="card"><h3>Sieger pro Spiel eintragen</h3><p class="small" style="margin:4px 0 8px">Alternative während der Spiele: Siegerteam antippen, die Steine der Runde werden automatisch gezählt. Direkt eingetragene Steine oben haben Vorrang.</p><div class="tw">${planTable(0,true)}</div>
+  ${Object.keys(S.stones).length?`<button class="btn ghost mt" id="clearManual">Manuelle Einträge löschen, wieder automatisch zählen</button>`:''}</div></div>`;
+  const setStones=(n,v)=>{v=Math.max(0,Math.min(99,Math.round(+v||0)));S.stones[n]=v;save();renderWert()};
+  main.querySelectorAll('#rank button[data-d]').forEach(b=>b.onclick=()=>{const n=+b.dataset.n;const cur=ranking().find(x=>x.n===n).p;setStones(n,cur+ +b.dataset.d)});
+  main.querySelectorAll('#rank input').forEach(i=>{i.onchange=()=>setStones(+i.dataset.n,i.value);i.onfocus=()=>i.select()});
+  main.querySelectorAll('.tb').forEach(b=>b.onclick=()=>{const k=b.dataset.k,t=+b.dataset.t;S.wins[k]=S.wins[k]===t?null:t;save();renderWert()});
+  const cm=$('#clearManual');if(cm)cm.onclick=()=>{S.stones={};save();renderWert()};
+  $('#copyBtn').onclick=async e=>{const txt='KSBK-Spiele 2026 – Ergebnis\n'+ranking().map(x=>`${x.place}. Team ${x.n} ${T(x.n).name} – ${x.p} Steine`).join('\n');try{await navigator.clipboard.writeText(txt);toast('Kopiert')}catch(err){openSheet(`<div class="sh"><h3>Ergebnis</h3><button class="btn sec" id="shClose">Schließen</button></div><textarea style="width:100%;height:260px;font:inherit;font-size:14px;border-radius:12px;border:1px solid var(--line);padding:10px" readonly>${txt}</textarea>`,()=>{const ta=$('#sheet textarea');ta.focus();ta.select()})}};
+  $('#cerBtn').onclick=()=>{if(anyWin)openCeremony()};
+}
+function openCeremony(){const rk=ranking();const top=[rk[2],rk[1],rk[0]];let revealed=0;const cer=$('#cer');cer.classList.add('open');
+  const draw=()=>{$('#cerBody').innerHTML=`<span class="pill">Siegerehrung · KSBK-Spiele 2026</span><h2 style="font-size:32px">Karl-Schiller-Gewinnerteam</h2>
+  <div class="podium">${[2,1,3].map(pl=>{const x=top[3-pl];const idx=[3,2,1].indexOf(pl);const shown=idx<revealed;return `<div class="pod p${pl} ${shown?'':'hidden-p'}"><div class="pl">PLATZ ${pl}</div>${dot(x.n,72,28)}<div class="nm">${T(x.n).name}</div><div class="st">Team ${x.n} · ${x.p} Steine</div></div>`}).join('')}</div>
+  <div class="mt">${revealed<3?`<button class="btn big" id="reveal" style="max-width:360px">Platz ${3-revealed} aufdecken</button>`:`<div class="small">Herzlichen Glückwunsch, Team ${T(top[2].n).name}!</div>`}</div>`;
+    const b=$('#reveal');if(b)b.onclick=()=>{revealed++;draw();if(revealed===3)confetti()}};
+  draw();}
+$('#cerClose').onclick=()=>{$('#cer').classList.remove('open');confetti.stop&&confetti.stop()};
+function confetti(){const c=$('#conf'),ctx=c.getContext('2d');c.width=c.offsetWidth;c.height=c.offsetHeight;const cols=DATA.teams.map(t=>t.hex);const ps=Array.from({length:160},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height,r:4+Math.random()*6,c:cols[Math.random()*cols.length|0],v:2+Math.random()*3,a:Math.random()*6}));let run=true;confetti.stop=()=>run=false;
+  (function f(){if(!run)return;ctx.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.y+=p.v;p.a+=.1;p.x+=Math.sin(p.a);if(p.y>c.height)p.y=-10;ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,p.r,p.r*.6)});requestAnimationFrame(f)})();setTimeout(()=>run=false,8000)}
+
+/* ---------- sheet / toast ---------- */
+function openSheet(html,after){$('#sheet').innerHTML=html;$('#scrim').classList.add('open');history.pushState({sheet:1},'');const c=$('#shClose');if(c)c.onclick=closeSheet;after&&after()}
+function closeSheet(){$('#scrim').classList.remove('open');if(history.state&&history.state.sheet)history.back()}
+$('#scrim').onclick=e=>{if(e.target===e.currentTarget)closeSheet()};
+window.addEventListener('popstate',()=>{$('#scrim').classList.remove('open')});
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),1600)}
+setView('heute');
+</script>
+
+</body>
+</html>
